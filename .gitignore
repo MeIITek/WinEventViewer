@@ -1,0 +1,16 @@
+ConfigBackup/
+*.TempPoint.*
+*.Copy*.*
+*.sys.dat
+*.bck
+*.Run.ps1
+*.sys.dat
+*.exe.config
+*.psbuild
+*.log.csv
+*.psprojs
+*.Package.ps1
+*.log
+CustomMenu.inf
+*.RestorePoint.*
+*.Export.*

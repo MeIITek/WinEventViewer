@@ -1,0 +1,10 @@
+﻿<File version="3.2">
+  <Code><![CDATA[Function Main {
+	Param ([String]$Commandline)
+	$script:ExitCode = 0
+	$null = Show-MainForm_psf
+}]]></Code>
+  <Bookmarks />
+  <BreakPoints />
+  <TracePoints />
+</File>
