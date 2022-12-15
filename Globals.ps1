@@ -106,7 +106,7 @@ Class LogEntries
         
         If (-not [String]::IsNullOrEmpty($InputObject.Message))
         {
-            $this.Message = $InputObject.Message
+            $this.Message = $InputObject.Message.Trim()
         }
         
         If (-not [String]::IsNullOrEmpty($InputObject.ProviderName))
@@ -585,7 +585,7 @@ Function Get-LogEntries
             FilterHashtable = $null
             ComputerName    = $textboxHost.Text.Trim()
             MaxEvents       = [int]$numericupdownRecordCount.Text.Trim()
-            ErrorAction     = 'SilentlyContinue'
+            #ErrorAction     = 'SilentlyContinue'
         }
         
         $FilterHashtable = @{
@@ -598,10 +598,10 @@ Function Get-LogEntries
 		{
 			If ($Me.Cache.Credentials -eq $null)
 			{
-				$Me.Cache.Credentials = Get-Credential
+				#$Me.Cache.Credentials = Get-Credential
 			}
 			
-            $EventParam.Add('Credential', $Me.Cache.Credentials)
+            #$EventParam.Add('Credential', $Me.Cache.Credentials)
         }
         
         Switch ($comboboxType.Text.Trim())
@@ -640,15 +640,23 @@ Function Get-LogEntries
 		$Cnt = 0
 		$EventParam.FilterHashtable = $FilterHashtable
 		$Me.Cache.Entries = New-Object System.Collections.Generic.List['Object']
-        
-        Get-WinEvent @EventParam | Sort-Object TimeCreated -Descending | ForEach-Object `
-		{
-            $Data = [LogEntries]::New($_)
-            $Data.Count = ($Cnt++)
-            [Void]$Me.Cache.Entries.Add($Data)
-		}
 		
-		Write-Output $Me.Cache.Entries
+		Try
+		{
+			Get-WinEvent @EventParam | Sort-Object TimeCreated -Descending | ForEach-Object `
+			{
+				$Data = [LogEntries]::New($_)
+				$Data.Count = ($Cnt++)
+				[Void]$Me.Cache.Entries.Add($Data)
+			}
+			
+			Write-Output $Me.Cache.Entries
+		}
+		catch
+		{
+			$Message = $_.Exception.Message
+			[Void][System.Windows.Forms.MessageBox]::Show($Message, $Title, 'OK', 'Warning', 'Button1')
+		}
 	}
 }
 #endregion
